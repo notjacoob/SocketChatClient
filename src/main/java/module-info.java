@@ -1,6 +1,7 @@
 module live.notjacob.chatappclient {
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.prefs;
 
 
     opens live.notjacob.chatappclient to javafx.fxml;

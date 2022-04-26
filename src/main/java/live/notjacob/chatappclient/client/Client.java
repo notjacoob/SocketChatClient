@@ -61,17 +61,23 @@ public class Client {
 
     public void readLoop() throws IOException {
         Packet p = Packet.from(in.readLine());
+        System.out.println("Received packet: " + p);
         switch (p.topic()) {
-            case "connection success" -> FXMLController.get().addToMessages("System: Waiting for " + otherUser);
+            case "connection success" -> {
+                FXMLController.get().addToMessages("System: Waiting for " + otherUser);
+                FXMLController.get().setConnected(true);
+            }
             case "chat start" -> {
                 out.println(new Packet("connection confirm"));
                 FXMLController.get().addToMessages("System: " + otherUser + " has connected");
+                FXMLController.get().enableMessaging();
             }
             case "message" -> FXMLController.get().addToMessages(otherUser + ": " + new String(Base64.getDecoder().decode(p.getValue("message"))));
             case "disconnect safe" -> {
                 canDisconnect = true;
                 continueReadLoop = false;
                 FXMLController.get().addToMessages("System: disconnected");
+                FXMLController.get().setConnected(false);
             }
             case "other disconnect" -> {
                 FXMLController.get().addToMessages("System: " + otherUser + " disconnected");
